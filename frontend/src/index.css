@@ -1,0 +1,1214 @@
+﻿@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Terminal/Hacker Aesthetic */
+:root {
+  color-scheme: dark;
+  --terminal-bg: #0a0a0f;
+  --terminal-border: #1a1a2e;
+  --terminal-glow: rgba(6, 182, 212, 0.15);
+  --primary-green: #22c55e;
+  --primary-cyan: #06b6d4;
+  
+  /* Agent color palette */
+  --agent-mr-claw: #22d3ee;
+  --agent-hephaestus: #f59e0b;
+  --agent-athena: #8b5cf6;
+  --agent-test: #6b7280;
+  
+  /* Message type colors */
+  --user-text: #fbbf24;
+  --tool-badge: #a855f7;
+  --system-text: #6b7280;
+  --timestamp-text: #475569;
+}
+
+/* Consistent monospace font everywhere */
+* {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  @apply bg-black text-slate-100;
+  background: var(--terminal-bg);
+  color: var(--primary-green);
+}
+
+/* Blinking cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Glow effect for terminal windows */
+.terminal-glow {
+  box-shadow: 
+    0 0 0 1px rgba(34, 197, 94, 0.1),
+    0 0 20px rgba(6, 182, 212, 0.08),
+    0 0 40px rgba(34, 197, 94, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Status dot pulse animation for active agents */
+@keyframes status-pulse {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% { 
+    opacity: 0.7;
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+
+.status-dot-active {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* Live indicator pulse */
+@keyframes pulse-live {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+  }
+}
+
+.live-pulse {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+/* Terminal scanline effect (subtle) */
+.terminal-scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Scrollbar styling for terminal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #22c55e33;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e55;
+}
+
+/* Terminal window styling */
+.terminal-window {
+  background: linear-gradient(180deg, #0d0d14 0%, #0a0a0f 100%);
+  border: 1px solid #1a1a2e;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.terminal-header {
+  background: linear-gradient(180deg, #161622 0%, #0f0f18 100%);
+  border-bottom: 1px solid #1a1a2e;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Terminal card hover effect */
+.terminal-card {
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.terminal-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+  background: rgba(6, 182, 212, 0.02);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+/* Text colors */
+.text-primary { color: var(--primary-green); }
+.text-accent { color: var(--primary-cyan); }
+
+/* Selection styling */
+::selection {
+  background: rgba(34, 197, 94, 0.3);
+  color: #fff;
+}
+
+/* Focus styling */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 1px solid rgba(6, 182, 212, 0.5);
+  outline-offset: 2px;
+}
+
+/* Drag and drop active state */
+.dragging {
+  opacity: 0.5;
+  transform: scale(1.02);
+}
+
+/* ========================================
+   Elevated Terminal Styling
+   ======================================== */
+
+/* Stream container - no border, clean look */
+.stream-container {
+  position: relative;
+}
+
+.stream-container.active {
+  /* No border/glow - clean aesthetic */
+}
+
+/* Gradient header per stream */
+.stream-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.stream-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--agent-color-faded, rgba(139, 92, 246, 0.08)) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ========================================
+   Message Card Styling (Improved Readability)
+   ======================================== */
+
+/* Base message card */
+.message-card {
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.5;
+  position: relative;
+  border-left: 2px solid transparent;
+}
+
+.message-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* Message type icon - prepended to role label */
+.message-type-icon {
+  font-size: 0.7rem;
+  margin-right: 2px;
+  opacity: 0.9;
+}
+
+/* User message styling (YOU) - Amber/Gold with 💬 */
+.message-user {
+  background: rgba(251, 191, 36, 0.08);
+  border-left: 2px solid rgba(251, 191, 36, 0.4);
+  padding-left: 8px;
+  margin-left: 0;
+}
+
+.message-user:hover {
+  background: rgba(251, 191, 36, 0.12);
+  border-left-color: rgba(251, 191, 36, 0.6);
+}
+
+.message-user .role-label {
+  color: var(--user-text);
+}
+
+.message-user .message-type-icon::before {
+  content: '💬 ';
+  font-size: 0.65rem;
+}
+
+/* Assistant message styling - Agent color border with 🤖 */
+.message-assistant {
+  background: rgba(34, 197, 94, 0.03);
+  border-left: 2px solid var(--agent-color, rgba(34, 197, 94, 0.4));
+  padding-left: 8px;
+  margin-left: 0;
+}
+
+.message-assistant:hover {
+  background: rgba(34, 197, 94, 0.06);
+  border-left-color: var(--agent-color, rgba(34, 197, 94, 0.6));
+  box-shadow: inset 0 0 20px rgba(var(--agent-color-rgb, 34, 197, 94), 0.03);
+}
+
+.message-assistant .message-type-icon::before {
+  content: '🤖 ';
+  font-size: 0.65rem;
+}
+
+/* System message styling - Gray/Muted with ⚙️, smaller */
+.message-system {
+  background: rgba(107, 114, 128, 0.08);
+  border-left: 2px solid rgba(107, 114, 128, 0.3);
+  padding: 2px 6px;
+  padding-left: 8px;
+  margin-left: 0;
+  font-size: 0.65rem;
+}
+
+.message-system:hover {
+  background: rgba(107, 114, 128, 0.12);
+}
+
+.message-system .role-label {
+  color: var(--system-text);
+}
+
+.message-system .message-type-icon::before {
+  content: '⚙️ ';
+  font-size: 0.6rem;
+}
+
+/* Error message styling - Red with ❌ */
+.message-error {
+  background: rgba(239, 68, 68, 0.15);
+  border-left: 2px solid rgba(239, 68, 68, 0.5);
+  padding: 4px 8px;
+  padding-left: 8px;
+  margin-left: 0;
+}
+
+.message-error:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-left-color: rgba(239, 68, 68, 0.7);
+}
+
+.message-error .role-label {
+  color: #f87171;
+}
+
+.message-error .message-content {
+  color: rgba(248, 113, 113, 0.95);
+}
+
+.message-error .message-type-icon::before {
+  content: '❌ ';
+  font-size: 0.65rem;
+}
+
+.message-error .colon-sep {
+  color: rgba(239, 68, 68, 0.5);
+}
+
+/* Success message styling - Green with ✅ */
+.message-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-left: 2px solid rgba(34, 197, 94, 0.5);
+  padding: 4px 8px;
+  padding-left: 8px;
+  margin-left: 0;
+}
+
+.message-success:hover {
+  background: rgba(34, 197, 94, 0.18);
+  border-left-color: rgba(34, 197, 94, 0.7);
+}
+
+.message-success .role-label {
+  color: #4ade80;
+}
+
+.message-success .message-content {
+  color: rgba(74, 222, 128, 0.95);
+}
+
+.message-success .message-type-icon::before {
+  content: '✅ ';
+  font-size: 0.65rem;
+}
+
+.message-success .colon-sep {
+  color: rgba(34, 197, 94, 0.5);
+}
+
+/* Message content text */
+.message-content {
+  color: rgba(34, 197, 94, 0.9);
+  line-height: 1.4;
+}
+
+.message-user .message-content {
+  color: rgba(251, 191, 36, 0.95);
+}
+
+.message-system .message-content {
+  color: rgba(107, 114, 128, 0.85);
+}
+
+/* Role label styling */
+.role-label {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* Colon separator */
+.colon-sep {
+  color: rgba(34, 197, 94, 0.6);
+}
+
+.message-user .colon-sep {
+  color: rgba(251, 191, 36, 0.6);
+}
+
+.message-system .colon-sep {
+  color: rgba(107, 114, 128, 0.5);
+}
+
+/* Tool badge styling - Purple pills that pop */
+.tool-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  white-space: nowrap;
+  vertical-align: middle;
+  margin: 0 1px;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.15);
+}
+
+/* Timestamp styling - tabular numbers, muted */
+.timestamp {
+  color: var(--timestamp-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  font-size: 0.65rem;
+}
+
+/* Agent name colors */
+.agent-mr-claw { 
+  --agent-color: var(--agent-mr-claw); 
+  --agent-color-rgb: 34, 211, 238;
+  --agent-color-faded: rgba(34, 211, 238, 0.08); 
+}
+.agent-hephaestus { 
+  --agent-color: var(--agent-hephaestus); 
+  --agent-color-rgb: 245, 158, 11;
+  --agent-color-faded: rgba(245, 158, 11, 0.08); 
+}
+.agent-athena { 
+  --agent-color: var(--agent-athena); 
+  --agent-color-rgb: 139, 92, 246;
+  --agent-color-faded: rgba(139, 92, 246, 0.08); 
+}
+.agent-test { 
+  --agent-color: var(--agent-test); 
+  --agent-color-rgb: 107, 114, 128;
+  --agent-color-faded: rgba(107, 114, 128, 0.08); 
+}
+
+/* Agent text colors */
+.text-agent-mr-claw { color: var(--agent-mr-claw); }
+.text-agent-hephaestus { color: var(--agent-hephaestus); }
+.text-agent-athena { color: var(--agent-athena); }
+.text-agent-test { color: var(--agent-test); }
+
+/* Agent border colors */
+.border-agent-mr-claw { border-color: rgba(34, 211, 238, 0.3); }
+.border-agent-hephaestus { border-color: rgba(245, 158, 11, 0.3); }
+.border-agent-athena { border-color: rgba(139, 92, 246, 0.3); }
+.border-agent-test { border-color: rgba(107, 114, 128, 0.3); }
+
+/* ========================================
+   Markdown Widget Styles
+   ======================================== */
+
+/* Headers */
+.md-h1 {
+  display: block;
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 700; /* bold */
+  color: #22d3ee; /* cyan-400 */
+  margin: 8px 0 6px 0;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.3);
+  letter-spacing: -0.01em;
+}
+
+.md-h2 {
+  display: block;
+  font-size: 1rem; /* text-base */
+  font-weight: 600; /* semibold */
+  color: #e2e8f0; /* slate-200 */
+  margin: 6px 0 4px 0;
+  letter-spacing: -0.005em;
+}
+
+.md-h3 {
+  display: block;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* medium */
+  color: #cbd5e1; /* slate-300 */
+  margin: 5px 0 3px 0;
+}
+
+/* Bold and Italic */
+.md-bold {
+  font-weight: 600;
+  color: #f0fdf4;
+}
+
+.md-italic {
+  font-style: italic;
+  color: rgba(34, 197, 94, 0.85);
+}
+
+/* Inline Code - subtle chip */
+.md-code-inline {
+  display: inline;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Code Block - terminal card */
+.md-code-block {
+  display: block;
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  overflow-x: auto;
+  font-size: 0.65rem;
+  line-height: 1.4;
+}
+
+.md-code-block code {
+  color: #86efac;
+  white-space: pre;
+}
+
+.md-code-lang {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--primary-cyan);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Lists */
+.md-list {
+  margin: 4px 0;
+  padding-left: 16px;
+}
+
+.md-bullet-list {
+  list-style-type: disc;
+}
+
+.md-numbered-list {
+  list-style-type: decimal;
+}
+
+.md-list li {
+  margin: 2px 0;
+  color: rgba(34, 197, 94, 0.9);
+  font-size: inherit;
+}
+
+/* ========================================
+   ListBlock Component Styles
+   ======================================== */
+
+.list-block {
+  font-size: 0.7rem;
+}
+
+.list-block.compact {
+  font-size: 0.65rem;
+  margin: 2px 0;
+}
+
+.list-block.compact .list-item {
+  padding: 0;
+  margin: 1px 0;
+}
+
+.list-item {
+  line-height: 1.4;
+  padding: 1px 0;
+}
+
+.bullet-marker {
+  font-size: 0.6rem;
+}
+
+.number-marker {
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.list-item-content {
+  word-break: break-word;
+}
+
+/* Nested list indentation */
+.nested-list {
+  font-size: 0.65rem;
+}
+
+.nested-list .nested-list {
+  border-left: 1px solid rgba(6, 182, 212, 0.15);
+  margin-left: 4px;
+  padding-left: 8px;
+}
+
+/* Blockquote - left border accent */
+.md-blockquote {
+  display: block;
+  margin: 6px 0;
+  padding: 4px 10px;
+  border-left: 3px solid rgba(6, 182, 212, 0.5);
+  background: rgba(6, 182, 212, 0.05);
+  color: rgba(34, 197, 94, 0.8);
+  font-style: italic;
+  font-size: 0.7rem;
+}
+
+/* Horizontal Rule */
+.md-hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent);
+  margin: 8px 0;
+}
+
+/* Links */
+.md-link {
+  color: var(--primary-cyan);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(6, 182, 212, 0.5);
+  transition: all 0.15s ease;
+}
+
+.md-link:hover {
+  color: #67e8f9;
+  border-bottom-color: var(--primary-cyan);
+  background: rgba(6, 182, 212, 0.1);
+}
+
+/* Tables */
+.md-table-wrapper {
+  display: block;
+  margin: 6px 0;
+  overflow-x: auto;
+}
+
+.md-table {
+  border-collapse: collapse;
+  font-size: 0.65rem;
+  width: 100%;
+}
+
+.md-table th {
+  padding: 4px 8px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--primary-cyan);
+  font-weight: 600;
+  text-align: left;
+}
+
+.md-table td {
+  padding: 3px 8px;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  color: rgba(34, 197, 94, 0.85);
+}
+
+/* ========================================
+   TableBlock Component Styles
+   ======================================== */
+
+.table-block-wrapper {
+  position: relative;
+}
+
+.table-block-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.3) transparent;
+}
+
+.table-block-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.table-block-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.table-block-container::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.3);
+  border-radius: 2px;
+}
+
+.table-block-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.5);
+}
+
+.table-block {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+.table-header-cell {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(4px);
+}
+
+.table-row:nth-child(even) {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.table-row:hover {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.table-cell {
+  transition: background-color 0.1s ease;
+}
+
+/* Dispatch Badges - special status indicators */
+.dispatch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.dispatch-written {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #86efac;
+}
+
+.dispatch-read {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #67e8f9;
+}
+
+.dispatch-icon {
+  font-size: 0.7rem;
+}
+
+.dispatch-label {
+  letter-spacing: 0.05em;
+}
+
+.dispatch-path {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  margin-left: 4px;
+  font-size: 0.6rem;
+}
+
+/* ========================================
+   Widget Styles (File paths, URLs, KeyValues)
+   ======================================== */
+
+/* File path widget - folder chip */
+.widget-filepath {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  color: #fcd34d;
+  font-size: 0.7rem;
+  vertical-align: middle;
+  margin: 0 2px;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.widget-filepath:hover {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.path-icon {
+  font-size: 0.65rem;
+  opacity: 0.8;
+}
+
+.path-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+/* URL widget - link chip */
+.widget-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: var(--primary-cyan);
+  font-size: 0.7rem;
+  text-decoration: none;
+  vertical-align: middle;
+  margin: 0 2px;
+  transition: all 0.15s ease;
+}
+
+.widget-url:hover {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: rgba(6, 182, 212, 0.5);
+  color: #67e8f9;
+}
+
+.url-icon {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+.url-domain {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Key-Value widget - property chip */
+.widget-keyvalue {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  font-size: 0.7rem;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.kv-key {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.kv-colon {
+  color: rgba(139, 92, 246, 0.5);
+  margin: 0 2px;
+}
+
+.kv-value {
+  color: #c4b5fd;
+}
+
+/* ========================================
+   Inline Elements Component Styles
+   ======================================== */
+
+/* Inline Code - enhanced */
+.inline-code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.inline-code:hover {
+  background: rgba(51, 65, 85, 0.7);
+  border-color: rgba(100, 116, 139, 0.5);
+}
+
+/* KeyValue inline */
+.keyvalue-inline {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* URL Link - enhanced */
+.url-link {
+  text-decoration: none;
+}
+
+.url-link .underline-dashed {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 2px;
+}
+
+.url-icon {
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.url-link:hover .url-icon {
+  opacity: 1;
+}
+
+/* FilePath chip - enhanced */
+.filepath-chip {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.filepath-chip:hover {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.filepath-dir {
+  font-size: 0.6rem;
+}
+
+.filepath-name {
+  font-weight: 500;
+}
+
+/* Mention */
+.mention {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Tag */
+.tag {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Status Badge */
+.status-badge {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* ========================================
+   Kanban Animations
+   ======================================== */
+
+/* Task card enter/leave animations */
+@keyframes task-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes task-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+}
+
+/* Apply to task cards for smooth state changes */
+.task-card-animate {
+  animation: task-enter 0.25s ease-out;
+}
+
+/* Smooth column highlight on drag over */
+.kanban-column {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kanban-column.drag-over {
+  background-color: rgba(6, 182, 212, 0.05);
+  box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+/* Task count badge animation */
+@keyframes count-bump {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.count-update {
+  animation: count-bump 0.3s ease-out;
+}
+
+/* Smooth transitions for dnd-kit */
+.task-card-draggable {
+  transition: transform 0.2s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+}
+
+.task-card-draggable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.task-card-dragging {
+  opacity: 0.6;
+  transform: scale(1.03) rotate(2deg);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.2);
+  z-index: 100;
+}
+
+/* Column status color transitions */
+.column-header {
+  transition: color 0.2s ease;
+}
+
+/* Smooth empty state appearance */
+.empty-column {
+  animation: task-enter 0.3s ease-out;
+}
+
+/* ========================================
+   Animation & Transition Styles
+   ======================================== */
+
+/* Message card fade-in */
+@keyframes message-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-card {
+  animation: message-fade-in 0.2s ease-out;
+}
+
+/* Badge pulse animation */
+@keyframes badge-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.tool-badge {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+.status-badge {
+  animation: badge-pulse 3s ease-in-out infinite;
+}
+
+/* Dispatch badge slide-in */
+@keyframes dispatch-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.dispatch-badge {
+  animation: dispatch-slide-in 0.25s ease-out;
+}
+
+/* Inline code hover effect */
+.inline-code {
+  transition: all 0.15s ease;
+}
+
+/* Filepath hover effect */
+.filepath-chip {
+  transition: all 0.15s ease;
+}
+
+/* URL link hover effect */
+.url-link {
+  transition: all 0.15s ease;
+}
+
+/* Table row hover */
+.table-row {
+  transition: background-color 0.15s ease;
+}
+
+/* Expand/collapse animation for collapsible elements */
+@keyframes expand-down {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+@keyframes collapse-up {
+  from {
+    opacity: 1;
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+.expand-animation {
+  animation: expand-down 0.2s ease-out;
+}
+
+.collapse-animation {
+  animation: collapse-up 0.15s ease-out;
+}
+
+/* Smooth color transitions for status dots */
+.status-dot-active {
+  transition: all 0.3s ease;
+}
+
+/* Timestamp fade-in */
+@keyframes timestamp-fade {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+.timestamp {
+  animation: timestamp-fade 0.3s ease-out;
+}
+
+/* Typing cursor effect */
+@keyframes typing-cursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: typing-cursor 1s step-end infinite;
+}
+
+/* Toast notification slide-in */
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-notification {
+  animation: toast-slide-in 0.2s ease-out;
+}
+
+/* Modal backdrop fade */
+@keyframes backdrop-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-backdrop {
+  animation: backdrop-fade-in 0.15s ease-out;
+}
+
+.modal-content {
+  animation: modal-scale-in 0.2s ease-out;
+}
+
+/* Subtle glow pulse for active elements */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px rgba(6, 182, 212, 0.15);
+  }
+}
+
+.glow-active {
+  animation: glow-pulse 2s ease-in-out infinite;
+}

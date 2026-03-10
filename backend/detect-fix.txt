@@ -1,0 +1,26 @@
+﻿function detectSubagentFromContent(content) {
+  if (!content || typeof content !== 'string') return null;
+  
+  // Must have subagent context marker
+  if (!content.includes('[Subagent Context]')) {
+    return null;
+  }
+  
+  // Pattern 1: Label line like "Label: Hephaestus - <task>"
+  const labelMatch = content.match(/Label:\s*([A-Za-z]+)\s*-/);
+  if (labelMatch) {
+    const label = labelMatch[1].toLowerCase();
+    if (['hephaestus', 'athena', 'hermes', 'apollo'].includes(label)) {
+      return label;
+    }
+  }
+  
+  // Pattern 2: Look for agent name mentioned anywhere in subagent context
+  const lowerContent = content.toLowerCase();
+  if (lowerContent.includes('hephaestus')) return 'hephaestus';
+  if (lowerContent.includes('athena')) return 'athena';
+  if (lowerContent.includes('hermes')) return 'hermes';
+  if (lowerContent.includes('apollo')) return 'apollo';
+  
+  return null;
+}

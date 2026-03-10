@@ -1,0 +1,57 @@
+{
+  "project": {
+    "name": "Agent Dashboard",
+    "version": "1.0.0",
+    "title": "Agent Dashboard",
+    "statusText": "monitoring"
+  },
+  
+  "server": {
+    "port": 3001,
+    "host": "0.0.0.0",
+    "corsOrigin": true
+  },
+  
+  "database": {
+    "path": "./data/dashboard.db",
+    "walMode": true
+  },
+  
+  "paths": {
+    "openclawAgents": "~/.openclaw/agents",
+    "openclawWorkspace": "~/.openclaw/workspace",
+    "agentWorkspaces": {
+      "main": "~/.openclaw/workspace",
+      "athena": "~/clawd/agent-dashboard",
+      "hephaestus": "~/clawd/agent-dashboard"
+    }
+  },
+  
+  "agents": {
+    "names": {
+      "main": "Mr. Claw",
+      "hephaestus": "Hephaestus",
+      "athena": "Athena"
+    },
+    "colors": {
+      "main": "#22d3ee",
+      "hephaestus": "#f59e0b",
+      "athena": "#8b5cf6"
+    }
+  },
+  
+  "watcher": {
+    "pollingInterval": 500,
+    "usePolling": true,
+    "loadHistory": false
+  },
+  
+  "sse": {
+    "heartbeatInterval": 15000
+  },
+  
+  "frontend": {
+    "apiBase": "http://localhost:3001",
+    "devPort": 5173
+  }
+}
