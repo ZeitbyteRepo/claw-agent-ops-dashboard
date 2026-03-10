@@ -8,6 +8,7 @@ import { ApiClientProvider } from './apiClient';
 function AppContent() {
   const [chicagoTime, setChicagoTime] = useState<string>('');
   const [isResearchDrawerOpen, setIsResearchDrawerOpen] = useState(false);
+  const [showLogoModal, setShowLogoModal] = useState(false);
   const { config, loading } = useConfig();
 
   useEffect(() => {
@@ -44,7 +45,12 @@ function AppContent() {
       <header className="border-b border-cyan-900/30 bg-gradient-to-b from-slate-900/50 to-black">
         <div className="px-2 py-1 flex items-center gap-2">
           {/* Logo */}
-          <img src="/logo.png" alt="Claw Logo" className="h-6 w-auto" />
+          <img 
+            src="/logo.png" 
+            alt="Claw Logo" 
+            className="h-6 w-auto cursor-pointer hover:opacity-80 transition-opacity" 
+            onClick={() => setShowLogoModal(true)}
+          />
           
           <span className="text-cyan-400 text-xs font-bold">{config.project.name}</span>
           <span className="text-slate-600">|</span>
@@ -87,6 +93,28 @@ function AppContent() {
         isOpen={isResearchDrawerOpen} 
         onToggle={() => setIsResearchDrawerOpen(!isResearchDrawerOpen)} 
       />
+      
+      {/* Logo Modal */}
+      {showLogoModal && (
+        <div 
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setShowLogoModal(false)}
+        >
+          <div className="relative max-w-4xl max-h-[90vh] p-4">
+            <img 
+              src="/logo.png" 
+              alt="Claw Agent Ops Dashboard Logo" 
+              className="max-w-full max-h-[80vh] rounded-lg shadow-2xl"
+            />
+            <button
+              onClick={() => setShowLogoModal(false)}
+              className="absolute top-2 right-2 bg-slate-900/80 text-cyan-400 px-2 py-1 rounded text-xs hover:bg-slate-800"
+            >
+              ✕ Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
