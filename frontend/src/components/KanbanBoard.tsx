@@ -72,6 +72,7 @@ export function KanbanBoard() {
     // Connect to SSE for real-time task updates
     const disconnect = connectSSE({
       onMessage: (event: SSEEvent) => {
+        console.log('[SSE] Received event:', event.type, event.data);
         if (event.type === 'task_event') {
           const { task, event: taskEvent } = event.data;
           

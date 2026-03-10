@@ -609,7 +609,9 @@ export function connectSSE(optionsOrCallback: SSEOptions | ((event: SSEEvent) =>
   let reconnectAttempts = 0;
 
   const connect = () => {
-    eventSource = new EventSource(`${API_BASE}/api/streams/live`);
+    const sseUrl = `${API_BASE}/api/streams/live`;
+    console.log('[SSE] Connecting to:', sseUrl);
+    eventSource = new EventSource(sseUrl);
 
     eventSource.onopen = () => {
       console.log('SSE connected');
@@ -642,10 +644,11 @@ export function connectSSE(optionsOrCallback: SSEOptions | ((event: SSEEvent) =>
     eventSource.onmessage = (event) => {
       try {
         const parsed = JSON.parse(event.data);
+        console.log('[SSE] Parsed message:', parsed);
         // Backend sends: { type: "task_event", data: {...} }
         onMessage({ type: parsed.type, data: parsed.data });
       } catch (err) {
-        console.error('Failed to parse SSE message:', err);
+        console.error('[SSE] Failed to parse message:', err, event.data);
       }
     };
   };
