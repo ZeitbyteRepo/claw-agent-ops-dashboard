@@ -41,3 +41,14 @@ memory/
 *.log
 backend-error.log
 backend.log
+
+# OpenClaw agent workspace files
+SOUL.md
+USER.md
+AGENTS.md
+TOOLS.md
+HEARTBEAT.md
+IDENTITY.md
+BOOTSTRAP.md
+.openclaw/
+memory/
