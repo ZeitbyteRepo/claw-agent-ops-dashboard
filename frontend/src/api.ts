@@ -308,8 +308,9 @@ export function createApiClient(apiBase: string) {
 
         eventSource.onmessage = (event) => {
           try {
-            const data = JSON.parse(event.data);
-            onMessage({ type: event.type, data });
+            const parsed = JSON.parse(event.data);
+            // Backend sends: { type: "task_event", data: {...} }
+            onMessage({ type: parsed.type, data: parsed.data });
           } catch (err) {
             console.error('Failed to parse SSE message:', err);
           }
@@ -640,8 +641,9 @@ export function connectSSE(optionsOrCallback: SSEOptions | ((event: SSEEvent) =>
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
-        onMessage({ type: event.type, data });
+        const parsed = JSON.parse(event.data);
+        // Backend sends: { type: "task_event", data: {...} }
+        onMessage({ type: parsed.type, data: parsed.data });
       } catch (err) {
         console.error('Failed to parse SSE message:', err);
       }
