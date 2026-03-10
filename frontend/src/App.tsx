@@ -43,7 +43,10 @@ function AppContent() {
     <div className="h-screen bg-black text-green-400 flex flex-col overflow-hidden">
       <header className="border-b border-cyan-900/30 bg-gradient-to-b from-slate-900/50 to-black">
         <div className="px-2 py-1 flex items-center gap-2">
-          <span className="text-cyan-400 text-xs font-bold">~/{config.project.name.toLowerCase().replace(/\s+/g, '-')}</span>
+          {/* Logo */}
+          <img src="/logo.png" alt="Claw Logo" className="h-6 w-auto" />
+          
+          <span className="text-cyan-400 text-xs font-bold">{config.project.name}</span>
           <span className="text-slate-600">|</span>
           <span className="text-green-400 text-xs">{config.project.version}</span>
           <span className="text-slate-500 text-xs ml-auto">[{config.project.statusText}]</span>
