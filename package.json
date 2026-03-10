@@ -1,0 +1,45 @@
+{
+  "name": "@zeitbyte/claw-agent-ops-dashboard",
+  "version": "1.0.0",
+  "description": "Real-time operations dashboard for managing AI agents and workflows",
+  "private": false,
+  "license": "MIT",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run start -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "start": "npm run start -w backend",
+    "build": "npm run build -w frontend",
+    "preview": "npm run preview -w frontend",
+    "test": "npm test -w backend"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "dashboard",
+    "openclaw",
+    "operations",
+    "kanban",
+    "sse",
+    "realtime"
+  ],
+  "author": "Zeitbyte",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZeitbyteRepo/claw-agent-ops-dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZeitbyteRepo/claw-agent-ops-dashboard/issues"
+  },
+  "homepage": "https://github.com/ZeitbyteRepo/claw-agent-ops-dashboard#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -47,29 +47,29 @@ column column  APPROVAL TASKS   WORKS   SNAPSHOT
 git clone https://github.com/ZeitbyteRepo/claw-agent-ops-dashboard.git
 cd claw-agent-ops-dashboard
 
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
+# Install all dependencies (backend + frontend)
 npm install
 ```
 
 ### Running
 
 ```bash
-# Terminal 1: Start backend
-cd backend
-npm start
-
-# Terminal 2: Start frontend dev server
-cd frontend
+# Run both backend and frontend in dev mode
 npm run dev
+
+# Or run separately:
+npm run start     # Backend only (port 3001)
+npm run dev:frontend  # Frontend only (port 5173)
 ```
 
 - Backend runs on http://localhost:3001
 - Frontend runs on http://localhost:5173
+
+### Building for Production
+
+```bash
+npm run build
+```
 
 ## Configuration
 
